@@ -15,16 +15,16 @@ $(() => {
         console.log(arrComands.toString().split(',').join(''))
 
 
-        // if (arrComands.toString().split(['+']).length > 2) {
-        //     let firnsNumber = arrComands.toString().split(['+'])[0].split(',').join('')
-        //     let secondNumber = arrComands.toString().split(['+'])[1].split(',').join('')
+        if (arrComands.toString().split(['+']).length > 2) {
+            let firnsNumber = arrComands.toString().split(['+'])[0].split(',').join('')
+            let secondNumber = arrComands.toString().split(['+'])[1].split(',').join('')
 
-        //     total += Number(firnsNumber)
-        //     total += Number(secondNumber)
-        //     console.log(arrComands.toString().split(['+']))
+            total += Number(firnsNumber)
+            total += Number(secondNumber)
+            console.log(arrComands.toString().split(['+']))
 
-        //     arrComands = []
-        //     $input.val(total)
-        // }
+            arrComands = []
+            $input.val(total)
+        }
     })
 });
