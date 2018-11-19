@@ -3,28 +3,39 @@ $(() => {
     let $input = $('.field')
     let arrComands = []
     let total = 0
-    $input.on('change', () => {
-
-    })
+    $input.val(total)
+    let numberStr = ''
 
     $('.btn').on('click', function (e) {
         e.preventDefault()
+
         let symbol = $(this).text()
-        arrComands.push(symbol)
-        $input.val(arrComands.toString().split(',').join(''))
-        console.log(arrComands.toString().split(',').join(''))
 
+        //Making array from numbers and operators //
 
-        if (arrComands.toString().split(['+']).length > 2) {
-            let firnsNumber = arrComands.toString().split(['+'])[0].split(',').join('')
-            let secondNumber = arrComands.toString().split(['+'])[1].split(',').join('')
+        if ($(this).hasClass('btn-number')) {
+            numberStr += '' + symbol
+            $input.val(arrComands.toString().split(',').join('') + numberStr)
+        }
+        else {
+            arrComands.push(Number(numberStr))
+            numberStr = ''
+        }
 
-            total += Number(firnsNumber)
-            total += Number(secondNumber)
-            console.log(arrComands.toString().split(['+']))
-
-            arrComands = []
-            $input.val(total)
+        if ($(this).hasClass('btn-comand')) {
+            arrComands.push(symbol)
+            $input.val(arrComands.toString().split(',').join(''))
+        }
+        else if ($(this).hasClass('btn-equal')) {
+            calc(arrComands)
+            console.log(arrComands)
         }
     })
+
+    //That function should calculate result//
+
+    function calc(numbers) {
+        let index = numbers.indexOf('*')
+        console.log(index)
+    }
 });
