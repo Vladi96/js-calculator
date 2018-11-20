@@ -2,40 +2,88 @@ $(() => {
 
     let $input = $('.field')
     let arrComands = []
-    let total = 0
-    $input.val(total)
+    let result = 0
+    $input.val(result)
     let numberStr = ''
 
-    $('.btn').on('click', function (e) {
+    $input.on('keyup', function (e) {
         e.preventDefault()
 
-        let symbol = $(this).text()
-
-        //Making array from numbers and operators //
-
-        if ($(this).hasClass('btn-number')) {
-            numberStr += '' + symbol
-            $input.val(arrComands.toString().split(',').join('') + numberStr)
-        }
-        else {
-            arrComands.push(Number(numberStr))
-            numberStr = ''
-        }
-
-        if ($(this).hasClass('btn-comand')) {
+        let symbol = $input.val().slice(-1)
+        if (Number.isInteger(symbol) && /[\+\-\*/\.]/.test(arrComands.slice(-1)[0])) {
+            arrComands.pop()
             arrComands.push(symbol)
             $input.val(arrComands.toString().split(',').join(''))
-        }
-        else if ($(this).hasClass('btn-equal')) {
-            calc(arrComands)
-            console.log(arrComands)
+        } else {
+            if (/\d/.test(symbol) || /[\+\-\*/\.]/.test(symbol)) {
+                arrComands.push(symbol)
+                $input.val(arrComands.toString().split(',').join(''))
+
+            } else {
+                $input.val(arrComands.toString().split(',').join(''))
+            }
         }
     })
 
-    //That function should calculate result//
+    // function calc(numbers) {
+    //     let index = numbers.indexOf('*')
+    //     let a, b
 
-    function calc(numbers) {
-        let index = numbers.indexOf('*')
-        console.log(index)
-    }
-});
+    //     while (index != -1) {
+    //         a = numbers.splice(index - 1, 1)
+    //         b = numbers.splice(index, 1)
+    //         numbers[index - 1] = a * b
+    //         index = numbers.indexOf('*')
+    //     }
+
+    //     index = numbers.indexOf('/')
+    //     while (index != -1) {
+    //         a = numbers.splice(index - 1, 1)
+    //         b = numbers.splice(index, 1)
+    //         numbers[index - 1] = a / b
+    //         index = numbers.indexOf('/')
+    //     }
+
+    //     index = numbers.indexOf('+')
+    //     while (index != -1) {
+    //         a = Number(numbers.splice(index - 1, 1))
+    //         b = Number(numbers.splice(index, 1))
+    //         numbers[index - 1] = a + b
+    //         index = numbers.indexOf('+')
+    //     }
+
+    //     index = numbers.indexOf('-')
+    //     while (index != -1) {
+    //         a = numbers.splice(index - 1, 1)
+    //         b = numbers.splice(index, 1)
+    //         numbers[index - 1] = a - b
+    //         index = numbers.indexOf('-')
+    //     }
+    //     return numbers
+    // }
+})
+
+        // if ($(this).hasClass('btn-number')) {
+        //     numberStr += '' + symbol
+        //     $input.val(arrComands.toString().split(',').join('') + numberStr)
+        // }
+        // else {
+        //     if (result === 0) {
+        //         arrComands.push(Number(numberStr))
+        //         numberStr = ''
+        //     }
+        //     else {
+        //         console.log(arrComands)
+        //     }
+        // }
+
+        // if ($(this).hasClass('btn-comand')) {
+        //     arrComands.push(symbol)
+        //     $input.val(arrComands.toString().split(',').join(''))
+        // }
+        // else if ($(this).hasClass('btn-equal')) {
+        //     result = calc(arrComands)
+        //     $input.val(result)
+        //     arrComands = []
+        //     arrComands.push(result[0])
+        // }
