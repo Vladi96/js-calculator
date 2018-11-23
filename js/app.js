@@ -1,89 +1,106 @@
 $(() => {
 
-    let $input = $('.field')
-    let arrComands = []
-    let result = 0
-    $input.val(result)
-    let numberStr = ''
+    let input = $('#result');
+    let arrComands = [];
+    input.text(0)
+    let numberStr = '';
 
-    $input.on('keyup', function (e) {
-        e.preventDefault()
+    $(this).on('keyup', function (e) {
+        let key = e.key;
 
-        let symbol = $input.val().slice(-1)
-        if (Number.isInteger(symbol) && /[\+\-\*/\.]/.test(arrComands.slice(-1)[0])) {
-            arrComands.pop()
-            arrComands.push(symbol)
-            $input.val(arrComands.toString().split(',').join(''))
-        } else {
-            if (/\d/.test(symbol) || /[\+\-\*/\.]/.test(symbol)) {
-                arrComands.push(symbol)
-                $input.val(arrComands.toString().split(',').join(''))
-
+        if (key == Number(key) || key === '.') {
+            if (key === '.') {
+                if ((!numberStr.includes('.')) && numberStr.length > 0) {
+                    numberStr += key
+                }
+                else {
+                    input.text(arrToString(arrComands) + numberStr)
+                }
             } else {
-                $input.val(arrComands.toString().split(',').join(''))
+                numberStr += key;
             }
         }
+        else if (/[\+\-\*/]/.test(key)) {
+            if (numberStr !== '') {
+                arrComands.push(Number(numberStr), key);
+                numberStr = '';
+            }
+            else if (numberStr === '' && key === '-' && arrComands.length === 0) {
+                numberStr += key
+            }
+            else {
+                arrComands.push(key);
+            }
+        }
+        else {
+
+            switch (key.toLowerCase()) {
+                case 'c':
+                    numberStr = '';
+                    arrComands = [];
+                    input.text(arrToString(arrComands));
+                    break;
+                case 'backspace':
+                    if (numberStr === '') {
+                        numberStr += arrComands.pop();
+                    }
+                    numberStr = numberStr.slice(0, -1);
+                    break;
+                case '=':
+                    arrComands.push(numberStr);
+                    arrComands = calc(arrComands);
+                    input.text(arrComands);
+                    break;
+                case 'enter':
+                    arrComands.push(Number(numberStr));
+                    arrComands = calc(arrComands);
+                    numberStr = ''
+                    input.text(arrToString(arrComands));
+                    break;
+                default:
+                    break;
+            }
+        }
+        input.text(arrToString(arrComands) + numberStr || 0)
     })
 
-    // function calc(numbers) {
-    //     let index = numbers.indexOf('*')
-    //     let a, b
+    function arrToString(array) {
+        return array.toString().split(',').join('')
+    }
 
-    //     while (index != -1) {
-    //         a = numbers.splice(index - 1, 1)
-    //         b = numbers.splice(index, 1)
-    //         numbers[index - 1] = a * b
-    //         index = numbers.indexOf('*')
-    //     }
-
-    //     index = numbers.indexOf('/')
-    //     while (index != -1) {
-    //         a = numbers.splice(index - 1, 1)
-    //         b = numbers.splice(index, 1)
-    //         numbers[index - 1] = a / b
-    //         index = numbers.indexOf('/')
-    //     }
-
-    //     index = numbers.indexOf('+')
-    //     while (index != -1) {
-    //         a = Number(numbers.splice(index - 1, 1))
-    //         b = Number(numbers.splice(index, 1))
-    //         numbers[index - 1] = a + b
-    //         index = numbers.indexOf('+')
-    //     }
-
-    //     index = numbers.indexOf('-')
-    //     while (index != -1) {
-    //         a = numbers.splice(index - 1, 1)
-    //         b = numbers.splice(index, 1)
-    //         numbers[index - 1] = a - b
-    //         index = numbers.indexOf('-')
-    //     }
-    //     return numbers
-    // }
+    function calc(numbers) {
+        let a, b;
+        console.log(numbers)
+        for (let i = 0; i < numbers.length; i++) {
+            if (numbers[i] === '*') {
+                a = numbers.splice(i - 1, 1);
+                b = numbers.splice(i, 1);
+                numbers[i - 1] = a * b;
+                i = i - 1;
+            } if (numbers[i] === '/') {
+                a = numbers.splice(i - 1, 1);
+                b = numbers.splice(i, 1);
+                numbers[i - 1] = a / b;
+                i = i - 1;
+            }
+        }
+        for (let i = 0; i < numbers.length; i++) {
+            if (numbers[i] === '+') {
+                a = numbers.splice(i - 1, 1);
+                b = numbers.splice(i, 1);
+                numbers[i - 1] = Number(a) + Number(b);
+                i = i - 1;
+            } if (numbers[i] === '-') {
+                a = numbers.splice(i - 1, 1);
+                b = numbers.splice(i, 1);
+                numbers[i - 1] = Number(a) - Number(b);
+                i = i - 1;
+            }
+        }
+        return numbers;
+    }
 })
 
-        // if ($(this).hasClass('btn-number')) {
-        //     numberStr += '' + symbol
-        //     $input.val(arrComands.toString().split(',').join('') + numberStr)
-        // }
-        // else {
-        //     if (result === 0) {
-        //         arrComands.push(Number(numberStr))
-        //         numberStr = ''
-        //     }
-        //     else {
-        //         console.log(arrComands)
-        //     }
-        // }
 
-        // if ($(this).hasClass('btn-comand')) {
-        //     arrComands.push(symbol)
-        //     $input.val(arrComands.toString().split(',').join(''))
-        // }
-        // else if ($(this).hasClass('btn-equal')) {
-        //     result = calc(arrComands)
-        //     $input.val(result)
-        //     arrComands = []
-        //     arrComands.push(result[0])
-        // }
+
+
