@@ -2,7 +2,7 @@ $(() => {
 
     let input = $('#result');
     let arrComands = [];
-    input.text(0)
+    input.text(0);
     let numberStr = '';
 
     $(this).on('keyup', function (e) {
@@ -11,10 +11,10 @@ $(() => {
         if (key == Number(key) || key === '.') {
             if (key === '.') {
                 if ((!numberStr.includes('.')) && numberStr.length > 0) {
-                    numberStr += key
+                    numberStr += key;
                 }
                 else {
-                    input.text(arrToString(arrComands) + numberStr)
+                    input.text(arrToString(arrComands) + numberStr);
                 }
             } else {
                 numberStr += key;
@@ -33,7 +33,6 @@ $(() => {
             }
         }
         else {
-
             switch (key.toLowerCase()) {
                 case 'c':
                     numberStr = '';
@@ -47,11 +46,67 @@ $(() => {
                     numberStr = numberStr.slice(0, -1);
                     break;
                 case '=':
-                    arrComands.push(numberStr);
+                    arrComands.push(Number(numberStr));
                     arrComands = calc(arrComands);
-                    input.text(arrComands);
+                    numberStr = ''
+                    input.text(arrToString(arrComands));
                     break;
                 case 'enter':
+                    arrComands.push(Number(numberStr));
+                    arrComands = calc(arrComands);
+                    numberStr = '';
+                    input.text(arrToString(arrComands));
+                    break;
+                default:
+                    break;
+            }
+        }
+        input.text(arrToString(arrComands) + numberStr || 0)
+    })
+
+    $('.btn').on('click', function (e) {
+        e.preventDefault();
+        let symbol = this.text
+        console.log(symbol)
+        if (symbol == Number(symbol) || symbol === '.') {
+            if (symbol === '.') {
+                if ((!numberStr.includes('.')) && numberStr.length > 0) {
+                    numberStr += symbol;
+                }
+                else {
+                    input.text(arrToString(arrComands) + numberStr);
+                }
+            } else {
+                numberStr += symbol;
+            }
+        }
+        else if (/[\+\-\*/]/.test(symbol)) {
+            if (numberStr !== '') {
+                arrComands.push(Number(numberStr), symbol);
+                numberStr = '';
+            }
+            else if (numberStr === '' && symbol === '-' && arrComands.length === 0) {
+                numberStr += symbol
+            }
+            else {
+                arrComands.push(symbol);
+            }
+        }
+        else {
+            console.log(symbol)
+            switch (symbol) {
+                case 'C':
+                    numberStr = '';
+                    arrComands = [];
+                    input.text(arrToString(arrComands));
+                    break;
+                case 'CE':
+                    if (numberStr === '') {
+                        numberStr += arrComands.pop();
+                    }
+                    numberStr = numberStr.slice(0, -1);
+                    break;
+                case '=':
                     arrComands.push(Number(numberStr));
                     arrComands = calc(arrComands);
                     numberStr = ''
@@ -62,15 +117,14 @@ $(() => {
             }
         }
         input.text(arrToString(arrComands) + numberStr || 0)
-    })
 
+    })
     function arrToString(array) {
         return array.toString().split(',').join('')
     }
 
     function calc(numbers) {
         let a, b;
-        console.log(numbers)
         for (let i = 0; i < numbers.length; i++) {
             if (numbers[i] === '*') {
                 a = numbers.splice(i - 1, 1);
@@ -100,7 +154,3 @@ $(() => {
         return numbers;
     }
 })
-
-
-
-
